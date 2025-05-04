@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5652dga184q8"]
+
+[ext_resource type="Script" path="res://Assets/GameStates/Scripts/MainMenu.cs" id="1_uiutx"]
+[ext_resource type="PackedScene" uid="uid://c6kysbx2s3uit" path="res://Assets/GameStates/PreloadBackground.tscn" id="2_xpe6o"]
+
+[node name="MainMenu" type="Node3D"]
+script = ExtResource("1_uiutx")
+
+[node name="MenuBackground2" parent="." instance=ExtResource("2_xpe6o")]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Main Menu"
+
+[node name="ExitButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Exit"
+
+[node name="Container" type="Container" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="pressed" from="VBoxContainer/ExitButton" to="." method="OnExitButtonPressed"]

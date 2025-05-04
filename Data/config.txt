@@ -1,0 +1,19 @@
+# Configuration file for Survival
+[Paths]
+StateFile=Data/state.txt
+MachineOptionsFile=Data/machine_options.txt
+UserOptionsFile=Data/user_options.txt
+
+[AssetPaths]
+GameStateFolder=Assets/GameStates
+MaterialFolder=Assets/Materials
+MeshFolder=Assets/Meshes
+TextureFolder=Assets/Textures
+
+[DisplayInfo]
+Monitor=Primary
+Fullscreen=true
+LocationX=0
+LocationY=0
+ResolutionWidth=1920
+ResolutionHeight=1080

@@ -1,0 +1,6 @@
+# Redot 4+ specific ignores
+.godot/
+/android/
+
+# Ignore the Temp folder and all its content
+Temp/

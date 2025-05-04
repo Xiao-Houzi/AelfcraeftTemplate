@@ -1,0 +1,7 @@
+Options.Graphics.ResolutionWidth=3440
+Options.Graphics.ResolutionHeight=1440
+Options.Graphics.Fullscreen=true
+Options.Controls.MoveForward=W
+Options.Controls.MoveBackward=S
+Options.Controls.MoveLeft=A
+Options.Controls.MoveRight=D

@@ -1,0 +1,40 @@
+using Godot;
+using Survival.Infrastructure.Services;
+using System;
+
+public abstract partial class BaseGameState : Node3D
+{
+    protected static ServiceCollection Services;
+
+    public static void Initialise(ServiceCollection services)
+    {
+        Services = services;
+        LogService=services.GetService<LogService>(); 
+        MessengerService=services.GetService<MessengerService>();
+        StateStorageService=services.GetService<StateStorageService>();
+
+    }
+
+    public virtual void Initialise()
+    {
+        // Initialize the game state
+        MessengerService?.SendMessage(MessengerService.MessageType.Initialised, new MessengerService.Args() { Sender = this });
+    }
+
+    protected virtual void OnInitialised()
+    {
+        // Optional override for derived classes to handle initialization
+    }
+
+    protected static LogService LogService { get; private set; }
+    protected static MessengerService MessengerService { get; private set; }
+    protected static StateStorageService StateStorageService { get; private set; }
+    protected static AssetLoaderService AssetLoaderService { get; private set; }
+    protected static InputService InputService { get; private set; }
+    protected static MissionService MissionService { get; private set; }
+
+    protected bool freeable = false;
+
+    //////////
+    
+}

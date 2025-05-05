@@ -2,253 +2,266 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Survival.Infrastructure.Services; // Add this to reference LogService
+using Aelfcraeft.GameStates; // Updated namespace reference
 
-public class AssetLoaderService : BaseService
+namespace Aelfcraeft.Infrastructure.Services
 {
-    // Update to use BaseService for accessing services.
-    public AssetLoaderService() : base()
+    public class AssetLoaderService : BaseService
     {
-        // No additional initialization needed as services are accessed via BaseService.
-    }
-
-    // Add a method to check memory availability.
-    public long GetAvailableMemory()
-    {
-        return System.GC.GetTotalMemory(false);
-    }
-
-    // Update LoadAsset to cache assets in memory.
-    public T LoadAsset<T>(string path) where T : Resource
-    {
-        if (_assetCache.TryGetValue(path, out var cachedAsset))
+        // Update to use BaseService for accessing services.
+        public AssetLoaderService() : base()
         {
-            return cachedAsset as T;
+            // No additional initialization needed as services are accessed via BaseService.
         }
 
-        var asset = ResourceLoader.Load<T>(path);
-        if (asset != null)
+        // Add a method to check memory availability.
+        public long GetAvailableMemory()
         {
-            _assetCache[path] = asset;
+            return System.GC.GetTotalMemory(false);
         }
-        else
+
+        // Update LoadAsset to cache assets in memory.
+        public T LoadAsset<T>(string path) where T : Resource
         {
-            LogService.LogErr($"Failed to load asset at path: {path}");
-        }
-        return asset;
-    }
-
-    public PackedScene LoadScene(string sceneName)
-    {
-        var gameStateFolder = StateStorage.GetReferenceType<string>("GameStateFolder");
-        var path = System.IO.Path.Combine(gameStateFolder, sceneName + ".tscn");
-        LogService.Log($"Loading scene: {path}");
-        var scene = GD.Load<PackedScene>(path);
-        if (scene == null)
-        {
-            LogService.LogErr($"Failed to load scene at path: {path}");
-        }
-        return scene;
-    }
-
-    public Texture LoadTexture(string path)
-    {
-        return LoadAsset<Texture>(path);
-    }
-
-    public Material LoadMaterial(string path)
-    {
-        return LoadAsset<Material>(path);
-    }
-
-    public Mesh LoadMesh(string path)
-    {
-        return LoadAsset<Mesh>(path);
-    }
-
-    public async Task PreloadAssets()
-    {
-        LogService.Log("PreloadAssets: Starting asset preloading.");
-
-        await Task.Run(() =>
-        {
-            PreloadScenes(new List<string> { "MainMenu", "Options", "Welcome", "Game" });
-            PreloadTextures();
-            PreloadMaterials();
-            PreloadMeshes();
-
-            LogService.Log("PreloadAssets: All assets preloaded. Sending AssetsPreloaded signal.");
-            Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.AssetsPreloaded);
-        });
-
-        LogService.Log("PreloadAssets: Asset preloading task completed.");
-    }
-
-    private void PreloadTextures()
-    {
-        var textureFolder = "Assets/Textures";
-        var textureFiles = System.IO.Directory.GetFiles(textureFolder, "*.tres", System.IO.SearchOption.TopDirectoryOnly);
-        foreach (var textureFile in textureFiles)
-        {
-            LogService.Log($"Preloading texture: {textureFile}");
-            LoadTexture(textureFile);
-        }
-    }
-
-    private void PreloadMaterials()
-    {
-        var materialFolder = "Assets/Materials";
-        var materialFiles = System.IO.Directory.GetFiles(materialFolder, "*.tres", System.IO.SearchOption.TopDirectoryOnly);
-        foreach (var materialFile in materialFiles)
-        {
-            LogService.Log($"Preloading material: {materialFile}");
-            try
+            if (_assetCache.TryGetValue(path, out var cachedAsset))
             {
-                LoadMaterial(materialFile);
+                return cachedAsset as T;
             }
-            catch (Exception ex)
+
+            var asset = ResourceLoader.Load<T>(path);
+            if (asset != null)
             {
-                LogService.LogErr($"Failed to preload material: {materialFile}. Error: {ex.Message}");
+                _assetCache[path] = asset;
+            }
+            else
+            {
+                LogService.LogErr($"Failed to load asset at path: {path}");
+            }
+            return asset;
+        }
+
+        public PackedScene LoadScene(string sceneName)
+        {
+            var gameStateFolder = StateStorage.GetReferenceType<string>("GameStateFolder");
+            if (string.IsNullOrEmpty(gameStateFolder))
+            {
+                LogService.LogErr("GameStateFolder is not set in StateStorage. Cannot load scene.");
+                return null;
+            }
+            var path = System.IO.Path.Combine(gameStateFolder, sceneName + ".tscn");
+            LogService.Log($"Loading scene: {path}");
+            var scene = GD.Load<PackedScene>(path);
+            if (scene == null)
+            {
+                LogService.LogErr($"Failed to load scene at path: {path}");
+            }
+            return scene;
+        }
+
+        public Texture LoadTexture(string path)
+        {
+            return LoadAsset<Texture>(path);
+        }
+
+        public Material LoadMaterial(string path)
+        {
+            return LoadAsset<Material>(path);
+        }
+
+        public Mesh LoadMesh(string path)
+        {
+            return LoadAsset<Mesh>(path);
+        }
+
+        public async Task PreloadAssets()
+        {
+            LogService.Log("PreloadAssets: Starting asset preloading.");
+
+            await Task.Run(() =>
+            {
+                PreloadScenes(new List<string> { "MainMenu", "Options", "Welcome", "Game" });
+                PreloadTextures();
+                PreloadMaterials();
+                PreloadMeshes();
+
+                LogService.Log("PreloadAssets: All assets preloaded. Sending AssetsPreloaded signal.");
+                Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.AssetsPreloaded);
+            });
+
+            LogService.Log("PreloadAssets: Asset preloading task completed.");
+        }
+
+        private void PreloadTextures()
+        {
+            LogService.Log($"Preloading textures...");
+            var textureFolder = "Assets/Textures";
+            var textureFiles = System.IO.Directory.GetFiles(textureFolder, "*.tres", System.IO.SearchOption.TopDirectoryOnly);
+            foreach (var textureFile in textureFiles)
+            {
+                LogService.Log($"Preloading texture: {textureFile}");
+                LoadTexture(textureFile);
             }
         }
-    }
 
-    private void PreloadMeshes()
-    {
-        var meshFolder = "Assets/Meshes";
-        var meshFiles = System.IO.Directory.GetFiles(meshFolder, "*.tres", System.IO.SearchOption.TopDirectoryOnly);
-        foreach (var meshFile in meshFiles)
+        private void PreloadMaterials()
         {
-            LogService.Log($"Preloading mesh: {meshFile}");
-            LoadMesh(meshFile);
-        }
-    }
-
-    // Add a method to clear unused assets from memory.
-    public void ClearUnusedAssets()
-    {
-        foreach (var key in new List<string>(_assetCache.Keys))
-        {
-            if (_assetCache[key] == null)
+            LogService.Log($"Preloading materials...");
+            var materialFolder = "Assets/Materials";
+            var materialFiles = System.IO.Directory.GetFiles(materialFolder, "*.tres", System.IO.SearchOption.TopDirectoryOnly);
+            foreach (var materialFile in materialFiles)
             {
-                _assetCache.Remove(key);
-            }
-        }
-        System.GC.Collect();
-    }
-
-
-    public void PreloadScenes(List<string> sceneNames)
-    {
-        var gameStateFolder = BaseService.StateStorage.GetReferenceType<string>("GameStateFolder");
-        foreach (var name in sceneNames)
-        {
-            if (!_instantiatedScenes.ContainsKey(name))
-            {
-                var path = System.IO.Path.Combine(gameStateFolder, name + ".tscn");
-                LogService.Log($"Preloading scene: {path}");
-                var packedScene = GD.Load<PackedScene>(path);
-                if (packedScene != null)
+                LogService.Log($"Preloading material: {materialFile}");
+                try
                 {
-                    var instance = packedScene.Instantiate();
-                    if (instance is BaseGameState baseGameState)
+                    LoadMaterial(materialFile);
+                }
+                catch (Exception ex)
+                {
+                    LogService.LogErr($"Failed to preload material: {materialFile}. Error: {ex.Message}");
+                }
+            }
+        }
+
+        private void PreloadMeshes()
+        {
+            LogService.Log($"Preloading meshes...");
+            var meshFolder = "Assets/Meshes";
+            var meshFiles = System.IO.Directory.GetFiles(meshFolder, "*.tres", System.IO.SearchOption.TopDirectoryOnly);
+            foreach (var meshFile in meshFiles)
+            {
+                LogService.Log($"Preloading mesh: {meshFile}");
+                LoadMesh(meshFile);
+            }
+        }
+
+        // Add a method to clear unused assets from memory.
+        public void ClearUnusedAssets()
+        {
+            foreach (var key in new List<string>(_assetCache.Keys))
+            {
+                if (_assetCache[key] == null)
+                {
+                    _assetCache.Remove(key);
+                }
+            }
+            System.GC.Collect();
+        }
+
+
+        public void PreloadScenes(List<string> sceneNames)
+        {
+            var gameStateFolder = BaseService.StateStorage.GetReferenceType<string>("GameStateFolder");
+            foreach (var name in sceneNames)
+            {
+                if (!_instantiatedScenes.ContainsKey(name))
+                {
+                    var path = System.IO.Path.Combine(gameStateFolder, name + ".tscn");
+                    LogService.Log($"Preloading scene: {path}");
+                    var packedScene = GD.Load<PackedScene>(path);
+                    if (packedScene != null)
                     {
-                        _sceneCache[name] = packedScene;
-                        AddToInstantiatedScenes(name, baseGameState);
+                        var instance = packedScene.Instantiate();
+                        if (instance is BaseGameState baseNode)
+                        {
+                            _sceneCache[name] = packedScene;
+                            _instantiatedScenes[name] = baseNode;
+                            LogService.Log($"Scene instantiated and preloaded: {name}");
+                        }
+                        else
+                        {
+                            LogService.LogErr($"Failed to cast scene instance to Node: {name}");
+                        }
                     }
-                    
-                    LogService.Log($"Scene instantiated and preloaded: {name}");
+                    else
+                    {
+                        LogService.LogErr($"Failed to preload scene: {name}");
+                    }
                 }
-                else
+            }
+        }
+
+        public Node GetInstantiatedScene(string sceneName)
+        {
+            if (_instantiatedScenes.TryGetValue(sceneName, out var scene))
+            {
+                return scene;
+            }
+            LogService.LogErr($"Scene not found in instantiated cache: {sceneName}");
+            return null;
+        }
+
+        public PackedScene GetPreloadedScene(string path)
+        {
+            if (_sceneCache.TryGetValue(path, out var scene))        {
+                return scene;
+            }
+            LogService.LogErr($"Scene not found in cache: {path}");
+            return null;
+        }
+
+        // Add a dictionary to store loaded assets in memory.
+        private readonly Dictionary<string, Resource> _assetCache = new Dictionary<string, Resource>();
+        private readonly Dictionary<string, PackedScene> _sceneCache = new Dictionary<string, PackedScene>();
+        private readonly Dictionary<string, BaseGameState> _instantiatedScenes = new Dictionary<string, BaseGameState>(StringComparer.OrdinalIgnoreCase);
+
+        public void InstantiateSplashImmediately()
+        {
+            LogService.Log("Instantiating splash scene immeediately.");
+            var splashScene = LoadScene("Splash");
+            if (splashScene != null)
+            {
+                var splashInstance = (BaseGameState)splashScene.Instantiate();
+                if (splashInstance is BaseGameState baseGameState)
                 {
-                    LogService.LogErr($"Failed to preload scene: {name}");
+                    BaseGameState.Initialise(Services);
+                }
+                AddToInstantiatedScenes("Splash", splashInstance);
+                LogService.Log("Splash scene instantiated and stored in the scene cache.");
+            }
+            else
+            {
+                LogService.LogErr("Failed to load splash scene.");
+            }
+
+            if (_instantiatedScenes.TryGetValue("Splash", out var cachedSplashInstance))
+            {
+                if (cachedSplashInstance is BaseGameState baseGameState)
+                {
+                    LogService.Log("Splash scene instantiated and message sent to SceneManager.");
+                    Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.SplashInstantiated);
+
                 }
             }
         }
-    }
 
-    public Node GetInstantiatedScene(string sceneName)
-    {
-        if (_instantiatedScenes.TryGetValue(sceneName, out var scene))
+        public List<string> ListGameStates()
         {
-            return scene;
-        }
-        LogService.LogErr($"Scene not found in instantiated cache: {sceneName}");
-        return null;
-    }
-
-    public PackedScene GetPreloadedScene(string path)
-    {
-        if (_sceneCache.TryGetValue(path, out var scene))
-        {
-            return scene;
-        }
-        LogService.LogErr($"Scene not found in cache: {path}");
-        return null;
-    }
-
-    // Add a dictionary to store loaded assets in memory.
-    private readonly Dictionary<string, Resource> _assetCache = new Dictionary<string, Resource>();
-    private readonly Dictionary<string, PackedScene> _sceneCache = new Dictionary<string, PackedScene>();
-    private readonly Dictionary<string, BaseGameState> _instantiatedScenes = new Dictionary<string, BaseGameState>(StringComparer.OrdinalIgnoreCase);
-
-    public void InstantiateSplashImmediately()
-    {
-        LogService.Log("Instantiating splash scene immeediately.");
-        var splashScene = LoadScene("Splash");
-        if (splashScene != null)
-        {
-            var splashInstance = (BaseGameState)splashScene.Instantiate();
-            if (splashInstance is BaseGameState baseGameState)
+            var gameStateFolder = "Assets/GameStates";
+            var gameStateFiles = System.IO.Directory.GetFiles(gameStateFolder, "*.tscn", System.IO.SearchOption.TopDirectoryOnly);
+            var gameStateNames = new List<string>();
+            foreach (var file in gameStateFiles)
             {
-                BaseGameState.Initialise(Services);
+                var name = System.IO.Path.GetFileNameWithoutExtension(file);
+                if (name != "Splash") // Exclude Splash from deferred states
+                {
+                    gameStateNames.Add(name);
+                }
             }
-            AddToInstantiatedScenes("Splash", splashInstance);
-            LogService.Log("Splash scene instantiated and stored in the scene cache.");
-        }
-        else
-        {
-            LogService.LogErr("Failed to load splash scene.");
+            return gameStateNames;
         }
 
-        if (_instantiatedScenes.TryGetValue("Splash", out var cachedSplashInstance))
+        public void AddToInstantiatedScenes(string sceneName, BaseGameState sceneInstance)
         {
-            if (cachedSplashInstance is BaseGameState baseGameState)
+            if (!_instantiatedScenes.ContainsKey(sceneName))
             {
-                LogService.Log("Splash scene instantiated and message sent to SceneManager.");
-                Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.SplashInstantiated);
-
+                _instantiatedScenes[sceneName] = sceneInstance;
+                sceneInstance.Initialise();
+                LogService.Log($"Scene added to instantiated scenes: {sceneName}");
             }
-        }
-    }
-
-    public List<string> ListGameStates()
-    {
-        var gameStateFolder = "Assets/GameStates";
-        var gameStateFiles = System.IO.Directory.GetFiles(gameStateFolder, "*.tscn", System.IO.SearchOption.TopDirectoryOnly);
-        var gameStateNames = new List<string>();
-        foreach (var file in gameStateFiles)
-        {
-            var name = System.IO.Path.GetFileNameWithoutExtension(file);
-            if (name != "Splash") // Exclude Splash from deferred states
+            else
             {
-                gameStateNames.Add(name);
+                LogService.LogErr($"Scene already exists in instantiated scenes: {sceneName}");
             }
-        }
-        return gameStateNames;
-    }
-
-    public void AddToInstantiatedScenes(string sceneName, BaseGameState sceneInstance)
-    {
-        if (!_instantiatedScenes.ContainsKey(sceneName))
-        {
-            _instantiatedScenes[sceneName] = sceneInstance;
-            sceneInstance.Initialise();
-            LogService.Log($"Scene added to instantiated scenes: {sceneName}");
-        }
-        else
-        {
-            LogService.LogErr($"Scene already exists in instantiated scenes: {sceneName}");
         }
     }
 }

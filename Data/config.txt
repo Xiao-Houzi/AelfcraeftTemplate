@@ -17,3 +17,10 @@ LocationX=0
 LocationY=0
 ResolutionWidth=1920
 ResolutionHeight=1080
+
+# Game states configuration
+State.MainMenu=res://Assets/GameStates/MainMenu.tscn,false
+State.Game=res://Assets/GameStates/Game.tscn,false
+State.GamePreload=res://Assets/GameStates/GamePreload.tscn,false
+State.Options=res://Assets/GameStates/Options.tscn,false
+State.Welcome=res://Assets/GameStates/Welcome.tscn,true

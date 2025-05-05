@@ -1,35 +1,30 @@
 using Godot;
-using System;
-using Survival.Infrastructure.Services; // Add this to reference LogService
+using Aelfcraeft.Infrastructure.Services;
 
-public partial class MainMenu : BaseGameState
+namespace Aelfcraeft.GameStates
 {
-    public override void _Ready()
+    public partial class MainMenu : BaseGameState
     {
-        // Add initialization logic here
-    }
+    
 
-    protected override void OnInitialised()
-    {
-        // Perform any additional initialization specific to MainMenu
-    }
+        public override void _Ready()
+        {
+            
+        }
 
-private void OnStartButtonPressed()
-    {
-        Services.GetService<LogService>().Log("ExitButton pressed. Sending ExitGame message.");
-        Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.StartGame);
-    }
+        private void OnNewGamePressed()
+        {
+            MessengerService.SendMessage(MessengerService.MessageType.StartGame);
+        }
 
-    private void OnOptionsButtonPressed()
-    {
-        Services.GetService<LogService>().Log("ExitButton pressed. Sending ExitGame message.");
-        Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.OpenOptions);
-    }
+        private void OnOptionsPressed()
+        {
+            MessengerService.SendMessage(MessengerService.MessageType.OpenOptions);
+        }
 
-    private void OnExitButtonPressed()
-    {
-        Services.GetService<LogService>().Log("ExitButton pressed. Sending ExitGame message.");
-        Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.ExitGame);
+        private void OnExitPressed()
+        {
+            MessengerService.SendMessage(MessengerService.MessageType.ExitGame);
+        }
     }
-
 }

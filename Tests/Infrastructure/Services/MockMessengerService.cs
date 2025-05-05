@@ -1,15 +1,24 @@
 using System;
-using Survival.Infrastructure.Services;
+using Aelfcraeft.Infrastructure.Services;
 
 public class MockMessengerService : MessengerService
 {
-    public event Action WelcomeKeyPressEvent;
+    public new event Action StartGame;
+    public new event Action OpenOptions;
 
     public override void SendMessage(MessageType messageType)
     {
-        if (messageType == MessageType.WelcomeKeyPress)
+        switch (messageType)
         {
-            WelcomeKeyPressEvent?.Invoke();
+            case MessageType.StartGame:
+                StartGame?.Invoke();
+                break;
+            case MessageType.OpenOptions:
+                OpenOptions?.Invoke();
+                break;
+            default:
+                base.SendMessage(messageType);
+                break;
         }
     }
 }

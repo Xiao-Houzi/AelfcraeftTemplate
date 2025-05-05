@@ -1,15 +1,18 @@
 using Godot;
 using System;
 
-public partial class Options : BaseGameState
+namespace Aelfcraeft.GameStates
 {
-    public override void _Ready()
+    public partial class Options : BaseGameState
     {
-        // Add initialization logic here
-    }
+        public override void _Ready()
+        {
+            // Add initialization logic here
+        }
 
-    protected override void OnInitialised()
-    {
-        // Perform any additional initialization specific to Options
+        protected override void OnInitialised()
+        {
+            // Perform any additional initialization specific to Options
+        }
     }
 }

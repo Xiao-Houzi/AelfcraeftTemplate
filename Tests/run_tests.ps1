@@ -17,7 +17,7 @@ if (-Not (Test-Path $logDir)) {
 "=============================================" | Out-File $outputFile -Append
 
 # Dynamically search for test scripts
-$testScripts = Get-ChildItem -Path "d:\Dev\Redot\Projects\Survival\Tests\Scripts" -Filter "run_*_tests.ps1" | ForEach-Object { $_.FullName }
+$testScripts = Get-ChildItem -Path "d:\Dev\Redot\Projects\TemplateProject\Tests\Scripts" -Filter "*.cs" -Recurse
 
 foreach ($scriptPath in $testScripts) {
     Write-Host "Running $scriptPath..." -ForegroundColor Yellow

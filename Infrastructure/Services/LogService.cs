@@ -1,9 +1,9 @@
 using Godot;
 using System; // Added to resolve the CS0103 error for 'DateTime'.
 
-namespace Survival.Infrastructure.Services
+namespace Aelfcraeft.Infrastructure.Services
 {
-    public class LogService : BaseService
+    public class LogService : BaseService, ILogService
     {
         private readonly string _logFilePath;
 

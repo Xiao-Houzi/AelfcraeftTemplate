@@ -2,13 +2,34 @@ using Godot;
 using System.Collections.Generic;
 using System; // Added to resolve the CS0103 error for 'Convert'.
 
-namespace Survival.Infrastructure.Services
+namespace Aelfcraeft.Infrastructure.Services
 {
     public class StateStorageService : BaseService
     {
         public StateStorageService()
         {
-            
+            // Constructor no longer calls LoadStateFromConfig directly
+        }
+
+        public void Initialize()
+        {
+            // Load state after ConfigService is initialized
+            LoadStateFromConfig();
+        }
+
+        private void LoadStateFromConfig()
+        {
+            if (ConfigService == null)
+            {
+                LogService.LogErr("ConfigService is not initialized. Cannot load state from config.");
+                return;
+            }
+
+            var stateFilePath = ConfigService.GetConfigValue("StateFile");
+            if (!string.IsNullOrEmpty(stateFilePath))
+            {
+                LoadState(stateFilePath);
+            }
         }
 
         public void SetState(string key, object value)
@@ -83,21 +104,16 @@ namespace Survival.Infrastructure.Services
 
         public void LoadState()
         {
-            var stateFilePath = _configLoader.GetConfigValue("StateFile");
+            var stateFilePath = ConfigService.GetConfigValue("StateFile");
             LoadState(stateFilePath);
         }
 
         public void SaveState()
         {
-            var stateFilePath = _configLoader.GetConfigValue("StateFile");
+            var stateFilePath = ConfigService.GetConfigValue("StateFile");
             SaveState(stateFilePath);
         }
 
-
-
-        private readonly LogService _logservice = Services.GetService<LogService>();
-        private readonly ConfigService _configLoader = Services.GetService<ConfigService>();
-      
         private Dictionary<string, object> state = new Dictionary<string, object>();
     }
 }

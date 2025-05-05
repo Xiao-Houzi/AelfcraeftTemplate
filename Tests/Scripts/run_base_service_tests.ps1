@@ -1,8 +1,8 @@
 # PowerShell script to run BaseService tests
 
 # Define paths
-$solutionPath = "d:\Dev\Redot\Projects\Survival\Survival.sln"
-$outputFile = "d:\Dev\Redot\Projects\Survival\Temp\Logs\BaseServiceTests_$(Get-Date -Format yyyyMMdd_HHmmss).log"
+$solutionPath = "d:\Dev\Redot\Projects\Aelfcraeft\Aelfcraeft.sln"
+$outputFile = "d:\Dev\Redot\Projects\Aelfcraeft\Temp\Logs\BaseServiceTests_$(Get-Date -Format yyyyMMdd_HHmmss).log"
 
 # Run tests and log results
 Write-Host "Running BaseService tests..." -ForegroundColor Yellow

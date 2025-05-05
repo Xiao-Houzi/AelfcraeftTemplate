@@ -1,8 +1,8 @@
 using System;
 using NUnit.Framework;
-using Survival.Infrastructure.Services;
+using Aelfcraeft.Infrastructure.Services;
 
-namespace Survival.Tests.Infrastructure.Services
+namespace Aelfcraeft.Tests.Infrastructure.Services
 {
     [TestFixture]
     public class MessengerServiceTests

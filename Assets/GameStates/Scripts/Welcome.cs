@@ -1,31 +1,34 @@
 using Godot;
 using System;
-using Survival.Infrastructure.Services;
+using Aelfcraeft.Infrastructure.Services;
 
-public partial class Welcome : BaseGameState
+namespace Aelfcraeft.GameStates
 {
-    public Welcome()
+    public partial class Welcome : BaseGameState
     {
-        freeable = true;
-    }
-    
-    public override void _Ready()
-    {
-        
-        if (StateStorageService.GetValueType<bool>("HasSeenWelcome"))
+        public Welcome()
         {
-            MessengerService.SendMessage(MessengerService.MessageType.WelcomeKeyPress);
-            return;
+            freeable = true;
+        }
+        
+        public override void _Ready()
+        {
+            
+            if (StateStorageService.GetValueType<bool>("HasSeenWelcome"))
+            {
+                MessengerService.SendMessage(MessengerService.MessageType.WelcomeKeyPress);
+                return;
+            }
+
+            StateStorageService.SetState("HasSeenWelcome", true);
         }
 
-        StateStorageService.SetState("HasSeenWelcome", true);
-    }
-
-    public override void _Input(InputEvent @event)
-    {
-        if (@event is InputEventKey)
+        public override void _Input(InputEvent @event)
         {
-            MessengerService.SendMessage(MessengerService.MessageType.WelcomeKeyPress);
+            if (@event is InputEventKey)
+            {
+                MessengerService.SendMessage(MessengerService.MessageType.WelcomeKeyPress);
+            }
         }
     }
 }

@@ -1,9 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://beleehxo4f2hf"]
+[gd_scene load_steps=3 format=3 uid="uid://beleehxo4f2hf"]
 
+[ext_resource type="Script" path="res://Assets/GameStates/Scripts/Game.cs" id="1_f6y37"]
 [ext_resource type="PackedScene" uid="uid://bjtwvfnfhnroc" path="res://UI/GameUI.tscn" id="1_wu3dh"]
 
 [node name="Game" type="Node3D"]
+script = ExtResource("1_f6y37")
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="GameScene" type="Node3D" parent="."]
 
 [node name="GameUi" parent="." instance=ExtResource("1_wu3dh")]

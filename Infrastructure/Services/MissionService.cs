@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Survival.Infrastructure.Services
+namespace Aelfcraeft.Infrastructure.Services
 {
     public class MissionService : BaseService
     {

@@ -1,7 +1,8 @@
 using NUnit.Framework;
-using Survival.Infrastructure.Services;
+using Aelfcraeft.Infrastructure.Services;
+using Aelfcraeft.Infrastructure.Management;
 
-namespace Survival.Tests.Infrastructure.Scripts
+namespace Aelfcraeft.Tests.Infrastructure.Scripts
 {
     [TestFixture]
     public class SceneManagerTests

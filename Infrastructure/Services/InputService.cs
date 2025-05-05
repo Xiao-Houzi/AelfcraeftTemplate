@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Survival.Infrastructure.Services
+namespace Aelfcraeft.Infrastructure.Services
 {
     public class InputService : BaseService
     {

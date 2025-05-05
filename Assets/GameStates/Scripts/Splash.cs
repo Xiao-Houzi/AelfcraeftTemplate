@@ -1,28 +1,32 @@
+using Aelfcraeft.Infrastructure.Services;
 using Godot;
 using System;
 
-public partial class Splash : BaseGameState
+namespace Aelfcraeft.GameStates
 {
-    private double elapsedDelta = 0;
-    private bool loadingCompleteMessageSent = false;
-
-    public Splash()
+    public partial class Splash : BaseGameState
     {
-        freeable = true;
-    }
+        private double elapsedDelta = 0;
+        private bool loadingCompleteMessageSent = false;
 
-    public override void _Ready()
-    {
-        base._Ready(); // Ensure the base class initialization is called
-        if (Services == null)
+        public Splash()
         {
-            LogService.LogErr("Services object is not initialized. Ensure it is set before using.");
+            freeable = true;
         }
-        Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.SplashLoadingComplete);
-    }
 
-    public override void _Process(double delta)
-    {
-        
+        public override void _Ready()
+        {
+            base._Ready(); // Ensure the base class initialization is called
+            if (Services == null)
+            {
+                LogService.LogErr("Services object is not initialized. Ensure it is set before using.");
+            }
+            Services.GetService<MessengerService>().SendMessage(MessengerService.MessageType.SplashLoadingComplete);
+        }
+
+        public override void _Process(double delta)
+        {
+            
+        }
     }
 }

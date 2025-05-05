@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace Survival.Infrastructure.Services
+namespace Aelfcraeft.Infrastructure.Services
 {
     public class ConfigService : BaseService
     {
@@ -66,6 +66,11 @@ namespace Survival.Infrastructure.Services
         public string GetConfigValue(string key)
         {
             return config.ContainsKey(key) ? config[key] : null;
+        }
+
+        public IEnumerable<string> GetAllConfigKeys()
+        {
+            return config.Keys;
         }
     }
 }

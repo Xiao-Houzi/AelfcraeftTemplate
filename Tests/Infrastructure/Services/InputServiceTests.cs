@@ -1,9 +1,9 @@
 using Godot;
 using NUnit.Framework;
 using System.Collections.Generic;
-using Survival.Infrastructure.Services; // Added to reference InputService
+using Aelfcraeft.Infrastructure.Services; // Added to reference InputService
 
-namespace Survival.Tests.Infrastructure.Services
+namespace Aelfcraeft.Tests.Infrastructure.Services
 {
     [TestFixture]
     public class InputServiceTests

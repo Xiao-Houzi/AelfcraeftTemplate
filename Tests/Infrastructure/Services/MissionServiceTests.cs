@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Survival.Tests.Infrastructure.Services
+namespace Aelfcraeft.Tests.Infrastructure.Services
 {
     [TestFixture]
     public class MissionServiceTests

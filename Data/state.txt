@@ -11,7 +11,6 @@ ResolutionHeight=1080
 StateFile=Data/state.txt
 MachineOptionsFile=Data/machine_options.txt
 UserOptionsFile=Data/user_options.txt
-RunNumber=27
 HasSeenWelcome=True
 Options.Graphics.ResolutionWidth=3440
 Options.Graphics.ResolutionHeight=1440

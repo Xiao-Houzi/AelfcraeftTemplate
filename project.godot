@@ -10,14 +10,14 @@ config_version=5
 
 [application]
 
-config/name="Survival"
-run/main_scene="res://base_scene.tscn"
+config/name="Aelfcraeft"
+run/main_scene="res://Assets/GameStates/base_scene.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 config/icon="res://Assets/icon.svg"
 
 [autoload]
 
-ApplicationManager="*res://Infrastructure/Scripts/ApplicationManager.cs"
+ApplicationManager="*res://Infrastructure/Management/ApplicationManager.cs"
 
 [display]
 
@@ -27,4 +27,4 @@ window/size/mode=4
 
 [dotnet]
 
-project/assembly_name="Survival"
+project/assembly_name="Aelfcraeft"
